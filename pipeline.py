@@ -175,7 +175,7 @@ def run_pipeline(pdf_path: str, output_json: str):
         print(f"[!] Error: Input file '{pdf_path}' not found.")
         return
 
-    doc = fitz.open(pdf_path)
+  with fitz.open(pdf_path) as doc:
     total_pages = len(doc)
     print(f"[*] Loaded document with {total_pages} pages. Running multi-column layout parser...")
 
