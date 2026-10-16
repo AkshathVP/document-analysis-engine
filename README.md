@@ -10,11 +10,13 @@ An end-to-end document processing pipeline designed for network-independent infe
 - **Hierarchical JSON Output:** Converts classified document elements into a nested JSON outline representing document structure.
 - **Containerized Execution:** Provides a Docker environment with the Sentence-Transformer model cached during image creation for network-independent inference at runtime.
 
+
 ## Architecture & Workflow
+
 1. **Geometry & Layout Extraction:** Uses `PyMuPDF (fitz)` to extract text blocks along with precise spatial coordinates `(x0, y0, x1, y1)` and font metadata.
-2. **Multi-Column Sorting:** Implements a two-pass spatial sorting algorithm that groups text blocks into vertical columns and sorts them by reading order, preventing cross-column text merging.
-3. 4. **Semantic Hierarchy Classification:** Uses a lightweight, locally cached `Sentence-Transformer` model (`all-MiniLM-L6-v2`) combined with font-size heuristic weighting to classify text spans into structural document roles (`H1`, `H2`, `H3`, `Body`).
-4. **JSON Outline Generation:** Assembles the classified nodes into a nested JSON tree structure representing the document's true table of contents and reading flow.
+2. **Multi-Column Sorting:** Groups text blocks into visual columns using bounding-box coordinates, then sorts columns left-to-right and text blocks top-to-bottom to reconstruct reading order.
+3. **Semantic Hierarchy Classification:** Uses a lightweight, locally cached `Sentence-Transformer` model (`all-MiniLM-L6-v2`) combined with font-size heuristic weighting to classify text spans into structural document roles (`H1`, `H2`, `H3`, `Body`).
+4. **JSON Outline Generation:** Assembles the classified nodes into a nested JSON tree representing the document's inferred structural hierarchy and reading flow.
 
 ## Project Structure
 ├── Dockerfile              # Container environment with cached Sentence-Transformer model
