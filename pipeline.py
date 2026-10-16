@@ -168,14 +168,18 @@ class SemanticOutlineExtractor:
 
 
 def run_pipeline(pdf_path: str, output_json: str):
-    print(f"[*] Initializing Automated Document Analysis System...")
+    print("[*] Initializing Automated Document Analysis System...")
     start_time = time.time()
-    
-      if not os.path.exists(pdf_path):
+
+    if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"Input file '{pdf_path}' not found.")
+
     with fitz.open(pdf_path) as doc:
         total_pages = len(doc)
-                print(f"[*] Extracted {len(all_blocks)} structural blocks. Performing semantic outline extraction...")
+        print(
+            f"[*] Loaded document with {total_pages} pages. "
+            "Running multi-column layout parser..."
+        )
 
         layout_parser = MultiColumnLayoutParser()
         extractor = SemanticOutlineExtractor()
@@ -186,20 +190,26 @@ def run_pipeline(pdf_path: str, output_json: str):
             sorted_blocks = layout_parser.parse_page(page)
             all_blocks.extend(sorted_blocks)
 
-               print(f"[*] Extracted {len(all_blocks)} structural blocks. Performing semantic outline extraction...")
+        print(
+            f"[*] Extracted {len(all_blocks)} structural blocks. "
+            "Performing semantic outline extraction..."
+        )
         classified_blocks = extractor.classify_blocks(all_blocks)
         hierarchical_outline = extractor.build_hierarchy(classified_blocks)
+
     elapsed_time = time.time() - start_time
     throughput = total_pages / elapsed_time if elapsed_time > 0 else 0
+
+    output_dir = os.path.dirname(os.path.abspath(output_json))
+    os.makedirs(output_dir, exist_ok=True)
 
     with open(output_json, "w", encoding="utf-8") as f:
         json.dump(hierarchical_outline, f, indent=4)
 
-    print(f"[*] Pipeline Execution Complete!")
+    print("[*] Pipeline Execution Complete!")
     print(f"    - Processing Time: {elapsed_time:.2f} seconds")
     print(f"    - Inference Throughput: {throughput:.2f} pages/sec")
     print(f"    - Structural Outline saved to: {output_json}")
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Automated Document Analysis System")
