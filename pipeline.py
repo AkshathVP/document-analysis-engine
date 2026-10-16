@@ -168,7 +168,7 @@ class SemanticOutlineExtractor:
 
 
 def run_pipeline(pdf_path: str, output_json: str):
-    print(f"[*] Initializing Offline Document Analysis Engine...")
+    print(f"[*] Initializing Automated Document Analysis System...")
     start_time = time.time()
     
   if not os.path.exists(pdf_path):
@@ -202,7 +202,7 @@ def run_pipeline(pdf_path: str, output_json: str):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Offline Document Analysis Engine")
+    parser = argparse.ArgumentParser(description="Automated Document Analysis System")
     parser.add_argument("--input", type=str, default="sample.pdf", help="Path to input PDF document")
     parser.add_argument("--output", type=str, default="outline.json", help="Path to output JSON outline")
     args = parser.parse_args()
