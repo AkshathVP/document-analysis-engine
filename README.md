@@ -13,7 +13,7 @@ An end-to-end document processing pipeline designed for network-independent infe
 ## Architecture & Workflow
 1. **Geometry & Layout Extraction:** Uses `PyMuPDF (fitz)` to extract text blocks along with precise spatial coordinates `(x0, y0, x1, y1)` and font metadata.
 2. **Multi-Column Sorting:** Implements a two-pass spatial sorting algorithm that groups text blocks into vertical columns and sorts them by reading order, preventing cross-column text merging.
-3. **Semantic Hierarchy Classification:** Uses a lightweight, locally cached `Sentence-Transformer` model (`all-MiniLM-L6-v2`) combined with font-size heuristic weighting to classify text spans into structural document roles (`Title`, `H1`, `H2`, `H3`, `Body`).
+3. 4. **Semantic Hierarchy Classification:** Uses a lightweight, locally cached `Sentence-Transformer` model (`all-MiniLM-L6-v2`) combined with font-size heuristic weighting to classify text spans into structural document roles (`H1`, `H2`, `H3`, `Body`).
 4. **JSON Outline Generation:** Assembles the classified nodes into a nested JSON tree structure representing the document's true table of contents and reading flow.
 
 ## Project Structure
