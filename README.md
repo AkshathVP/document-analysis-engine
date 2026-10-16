@@ -10,6 +10,12 @@ An end-to-end document processing pipeline for extracting document structure and
 - **Hierarchical JSON Output:** Converts classified document elements into a nested JSON outline representing document structure.
 - **Containerized Execution:** Provides a Docker environment with the Sentence-Transformer model cached during image creation for network-independent inference at runtime.
 
+## Docker Usage
+
+Build the Docker image:
+
+```bash
+docker build -t document-analysis-engine .
 
 ## Architecture & Workflow
 
