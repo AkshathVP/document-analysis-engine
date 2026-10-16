@@ -187,10 +187,9 @@ def run_pipeline(pdf_path: str, output_json: str):
             sorted_blocks = layout_parser.parse_page(page)
             all_blocks.extend(sorted_blocks)
 
-        print(f"[*] Extracted {len(all_blocks)} structural blocks. Performing semantic outline extraction...")
-    classified_blocks = extractor.classify_blocks(all_blocks)
-    hierarchical_outline = extractor.build_hierarchy(classified_blocks)
-
+               print(f"[*] Extracted {len(all_blocks)} structural blocks. Performing semantic outline extraction...")
+        classified_blocks = extractor.classify_blocks(all_blocks)
+        hierarchical_outline = extractor.build_hierarchy(classified_blocks)
     elapsed_time = time.time() - start_time
     throughput = total_pages / elapsed_time if elapsed_time > 0 else 0
 
