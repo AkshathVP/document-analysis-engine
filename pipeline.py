@@ -171,9 +171,8 @@ def run_pipeline(pdf_path: str, output_json: str):
     print(f"[*] Initializing Offline Document Analysis Engine...")
     start_time = time.time()
     
-    if not os.path.exists(pdf_path):
-        print(f"[!] Error: Input file '{pdf_path}' not found.")
-        return
+  if not os.path.exists(pdf_path):
+    raise FileNotFoundError(f"Input file '{pdf_path}' not found.")
     with fitz.open(pdf_path) as doc:
         total_pages = len(doc)
         print(f"[*] Loaded document with {total_pages} pages. Running multi-column layout parser...")
