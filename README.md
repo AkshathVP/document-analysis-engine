@@ -2,11 +2,13 @@
 
 An end-to-end, completely offline document processing pipeline designed to extract structured, hierarchical outlines from dense, unstructured PDFs. Built to handle complex multi-column layouts without relying on external APIs or cloud OCR services.
 
-## Key Performance Metrics
-* **Structural Accuracy:** Achieves **96% structural accuracy** in extracting H1, H2, and H3 hierarchical outlines across complex documents.
-* **Layout Parsing:** Utilizes a custom bounding-box sorting algorithm combined with `Sentence-Transformers` to resolve multi-column layouts, reducing text alignment errors by **85%** and outperforming standard baseline parsers by **40%**.
-* **High Throughput:** Optimized inference engine capable of processing **10+ pages per second** on CPU.
-* **100% Offline & Secure:** Containerized via Docker with pre-cached embedding models, ensuring zero data leakage and zero API dependencies for processing sensitive or proprietary documents (tested across 5+ GB of dense text data).
+## Key Features
+
+- **PDF Structure Extraction:** Uses PyMuPDF to extract text, bounding-box coordinates, and font metadata from PDF documents.
+- **Multi-Column Layout Parsing:** Applies spatial sorting based on text-block coordinates to reconstruct reading order across column-based layouts.
+- **Semantic Classification:** Uses a locally cached Sentence-Transformer model combined with font-based heuristics to classify document elements into H1, H2, H3, and Body roles.
+- **Hierarchical JSON Output:** Converts classified document elements into a nested JSON outline representing document structure.
+- **Containerized Execution:** Provides a Docker environment with the Sentence-Transformer model cached during image creation for network-independent inference at runtime.
 
 ## Architecture & Workflow
 1. **Geometry & Layout Extraction:** Uses `PyMuPDF (fitz)` to extract text blocks along with precise spatial coordinates `(x0, y0, x1, y1)` and font metadata.
