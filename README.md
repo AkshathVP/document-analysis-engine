@@ -1,6 +1,6 @@
 # Automated Document Analysis System
 
-An end-to-end, completely offline document processing pipeline designed to extract structured, hierarchical outlines from dense, unstructured PDFs. Built to handle complex multi-column layouts without relying on external APIs or cloud OCR services.
+An end-to-end document processing pipeline designed for network-independent inference inside a prebuilt Docker image
 
 ## Key Features
 
@@ -17,8 +17,8 @@ An end-to-end, completely offline document processing pipeline designed to extra
 4. **JSON Outline Generation:** Assembles the classified nodes into a nested JSON tree structure representing the document's true table of contents and reading flow.
 
 ## Project Structure
-```text
-├── Dockerfile              # Offline container environment with cached models
-├── requirements.txt        # Lightweight Python dependencies
+├── Dockerfile              # Container environment with cached Sentence-Transformer model
+├── .dockerignore           # Excludes unnecessary files from Docker build context
+├── requirements.txt        # Python dependencies
 ├── pipeline.py             # Core layout parsing and semantic extraction engine
-└── README.md               # Documentation
+└── README.md               # Project documentation
