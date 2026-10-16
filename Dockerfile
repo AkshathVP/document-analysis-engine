@@ -1,7 +1,7 @@
 # Use official lightweight Python runtime as a parent image
 FROM python:3.10-slim
 
-# Set environment variables to ensure zero API dependency and local caching
+# # Configure Python output and local Hugging Face model caching
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV HF_HOME=/root/.cache/huggingface
