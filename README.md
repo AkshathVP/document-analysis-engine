@@ -1,4 +1,4 @@
-# Offline Document Analysis Engine
+# Automated Document Analysis System
 
 An end-to-end, completely offline document processing pipeline designed to extract structured, hierarchical outlines from dense, unstructured PDFs. Built to handle complex multi-column layouts without relying on external APIs or cloud OCR services.
 
