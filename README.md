@@ -1,32 +1,117 @@
 # Automated Document Analysis System
 
-An end-to-end document processing pipeline for extracting document structure and generating hierarchical JSON outlines, with Docker support for network-independent inference.
+An end-to-end Python pipeline that extracts document structure from PDF files and generates hierarchical JSON outlines. The system combines PDF geometry, font metadata, Sentence-Transformer embeddings, and layout heuristics.
 
 ## Key Features
 
-- **PDF Structure Extraction:** Uses PyMuPDF to extract text, bounding-box coordinates, and font metadata from PDF documents.
-- **Multi-Column Layout Parsing:** Applies spatial sorting based on text-block coordinates to reconstruct reading order across column-based layouts.
-- **Semantic Classification:** Uses a locally cached Sentence-Transformer model combined with font-based heuristics to classify document elements into H1, H2, H3, and Body roles.
-- **Hierarchical JSON Output:** Converts classified document elements into a nested JSON outline representing document structure.
-- **Containerized Execution:** Provides a Docker environment with the Sentence-Transformer model cached during image creation for network-independent inference at runtime.
+- **PDF Structure Extraction:** Extracts text, bounding boxes, font sizes, and formatting metadata using PyMuPDF.
+- **Multi-Column Parsing:** Uses spatial coordinates to reconstruct an approximate reading order across columns.
+- **Structural Classification:** Uses `all-MiniLM-L6-v2` Sentence-Transformer embeddings with font and layout heuristics to classify text as `H1`, `H2`, `H3`, or `Body`.
+- **Hierarchical JSON:** Converts detected document structure into a nested JSON outline.
+- **Docker Support:** Provides a reproducible environment with the Sentence-Transformer model cached during image creation.
+
+## Architecture
+
+```text
+PDF
+ │
+ ▼
+PyMuPDF Extraction
+ │
+ ├── Text
+ ├── Bounding Boxes
+ ├── Font Size
+ └── Font Style
+ │
+ ▼
+Multi-Column Layout Ordering
+ │
+ ▼
+Sentence-Transformer Embeddings
+ │
+ ▼
+Cosine Similarity + Layout Heuristics
+ │
+ ▼
+H1 / H2 / H3 / Body
+ │
+ ▼
+Hierarchical JSON
+```
+
+## Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Core pipeline |
+| PyMuPDF | PDF extraction |
+| Sentence-Transformers | Semantic representation |
+| all-MiniLM-L6-v2 | Structural role inference |
+| scikit-learn | Cosine similarity |
+| NumPy | Numerical processing |
+| Docker | Containerized execution |
+
+## Project Structure
+
+```text
+document-analysis-engine/
+├── Dockerfile
+├── .dockerignore
+├── requirements.txt
+├── pipeline.py
+└── README.md
+```
+
+## Local Usage
+
+### Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Run
+
+```bash
+python pipeline.py --input path/to/input.pdf --output outline.json
+```
+
+The resulting hierarchical structure is saved as a JSON file.
 
 ## Docker Usage
 
-Build the Docker image:
+### Build
 
 ```bash
 docker build -t document-analysis-engine .
+```
 
-## Architecture & Workflow
+### Run
 
-1. **Geometry & Layout Extraction:** Uses `PyMuPDF (fitz)` to extract text blocks along with spatial coordinates `(x0, y0, x1, y1)` and font metadata.
-2. **Multi-Column Sorting:** Groups text blocks into visual columns using bounding-box coordinates, then sorts columns left-to-right and text blocks top-to-bottom to reconstruct reading order.
-3. **Structural Role Classification:** Uses a lightweight, locally cached `Sentence-Transformer` model (`all-MiniLM-L6-v2`) combined with font-size heuristics to classify text spans into structural document roles (`H1`, `H2`, `H3`, `Body`).
-4. **JSON Outline Generation:** Assembles the classified nodes into a nested JSON tree representing the document's inferred structural hierarchy and reading flow.
+Place your PDF inside `input_docs/`, then run:
 
-## Project Structure
-├── Dockerfile              # Container environment with cached Sentence-Transformer model
-├── .dockerignore           # Excludes unnecessary files from Docker build context
-├── requirements.txt        # Python dependencies
-├── pipeline.py             # Core layout parsing and semantic extraction engine
-└── README.md               # Project documentation
+```bash
+docker run --rm \
+  -v "$(pwd)/input_docs:/app/input_docs" \
+  -v "$(pwd)/output:/app/output" \
+  document-analysis-engine \
+  python pipeline.py \
+  --input /app/input_docs/sample.pdf \
+  --output /app/output/outline.json
+```
+
+The generated JSON will be available in the local `output/` directory.
+
+
+
+The system uses a combination of:
+
+- Bounding-box based layout analysis
+- Font-size and formatting heuristics
+- Sentence-Transformer embeddings
+- Cosine similarity against predefined structural role descriptions
+
+The classifier is not trained on a labelled document dataset. Complex layouts may require additional layout rules, and scanned PDFs may require OCR before processing.
+
+
+
