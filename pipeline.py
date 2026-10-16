@@ -174,21 +174,20 @@ def run_pipeline(pdf_path: str, output_json: str):
     if not os.path.exists(pdf_path):
         print(f"[!] Error: Input file '{pdf_path}' not found.")
         return
+    with fitz.open(pdf_path) as doc:
+        total_pages = len(doc)
+        print(f"[*] Loaded document with {total_pages} pages. Running multi-column layout parser...")
 
-  with fitz.open(pdf_path) as doc:
-    total_pages = len(doc)
-    print(f"[*] Loaded document with {total_pages} pages. Running multi-column layout parser...")
+        layout_parser = MultiColumnLayoutParser()
+        extractor = SemanticOutlineExtractor()
 
-    layout_parser = MultiColumnLayoutParser()
-    extractor = SemanticOutlineExtractor()
+        all_blocks = []
+        for page_num in range(total_pages):
+            page = doc[page_num]
+            sorted_blocks = layout_parser.parse_page(page)
+            all_blocks.extend(sorted_blocks)
 
-    all_blocks = []
-    for page_num in range(total_pages):
-        page = doc[page_num]
-        sorted_blocks = layout_parser.parse_page(page)
-        all_blocks.extend(sorted_blocks)
-
-    print(f"[*] Extracted {len(all_blocks)} structural blocks. Performing semantic outline extraction...")
+        print(f"[*] Extracted {len(all_blocks)} structural blocks. Performing semantic outline extraction...")
     classified_blocks = extractor.classify_blocks(all_blocks)
     hierarchical_outline = extractor.build_hierarchy(classified_blocks)
 
