@@ -5,7 +5,6 @@ FROM python:3.10-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV HF_HOME=/root/.cache/huggingface
-ENV TRANSFORMERS_OFFLINE=1
 
 # Set working directory inside the container
 WORKDIR /app
@@ -21,9 +20,11 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Pre-download and cache the Sentence-Transformer model during docker build
-# This guarantees 100% offline security with zero network calls at runtime
+# Download and cache the Sentence-Transformer model during image build
 RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+
+# Prevent model downloads during container runtime
+ENV TRANSFORMERS_OFFLINE=1
 
 # Copy the core pipeline scripts into the container
 COPY pipeline.py .
