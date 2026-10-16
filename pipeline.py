@@ -162,7 +162,7 @@ class SemanticOutlineExtractor:
                     current_h1["subsections"].append(node)
                 else:
                     outline["structure"].append(node)
-            # Body text is omitted from structural TOC outline to maintain 96%+ clean outline accuracy
+            # Body text is omitted because the output represents the document's structural outline.
             
         return outline
 
