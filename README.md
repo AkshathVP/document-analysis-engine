@@ -1,6 +1,6 @@
 # Automated Document Analysis System
 
-An end-to-end document processing pipeline designed for network-independent inference inside a prebuilt Docker image
+An end-to-end document processing pipeline for extracting document structure and generating hierarchical JSON outlines, with Docker support for network-independent inference.
 
 ## Key Features
 
